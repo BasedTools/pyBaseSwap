@@ -1,0 +1,9 @@
+loaders:
+  - type: python
+    search_path:
+      - pyBaseSwap  # Point to the folder containing your Python files
+
+renderer:
+  type: markdown
+  filename: docs/README.md
+

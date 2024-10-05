@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pyBaseSwap"
+version = "0.0.1"
+description = "pyBaseSwap provides Simple use of Blockchain data a"
+authors = ["BasedToolsAdmin@protonmail.com"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.1.4"
+mkdocstrings = "^0.20.0"
+mkdocstrings-python = "^0.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2"
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
