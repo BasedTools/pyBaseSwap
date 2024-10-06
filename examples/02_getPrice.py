@@ -1,6 +1,5 @@
 from pyBaseSwap import BaseSwap
 BS = BaseSwap()
-#Hi Sam!
 
 BS.changeToken(
   "0x4621b7A9c75199271F773Ebd9A499dbd165c3191" #Dola USD Stablecoin (DOLA)
@@ -20,8 +19,8 @@ Token Liquidity: {liquidity} $
 )
 
 # ok, we can print floats better
-clean_price = BS.w3U.custom_round(usdPrice)
-clean_liquidity = BS.w3U.custom_round(liquidity)
+clean_price = BS.custom_round(usdPrice)
+clean_liquidity = BS.custom_round(liquidity)
 
 print(
 f"""

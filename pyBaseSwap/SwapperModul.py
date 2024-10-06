@@ -6,7 +6,7 @@ from .ISwapperContract import InterfaceSwapperContract
 from web3 import Web3
 import  json
 
-class BaseSwap(InterfaceSwapperContract, W3Utils):
+class BaseSwap(InterfaceSwapperContract, W3Utils, IERC20):
     """
     A module for interacting with decentralized exchanges (DEX) and managing token swaps on the blockchain.
 
@@ -34,26 +34,25 @@ class BaseSwap(InterfaceSwapperContract, W3Utils):
         """
         self.settings = CoreSettings(settings_file_path,  saveSettings)
         self.w3 = self.connect()
-        self.w3U = W3Utils(self.settings, self.w3)
+        W3Utils.__init__(self, self.settings, self.w3)
         if Web3.is_address(token):
             self.token = Web3.to_checksum_address(token)
             pass
         else:
             print("No Token Addresss Provided fallback to USDC")
             self.token = chains(self.w3.eth.chain_id).BTT
-        self.IERC20 = IERC20(self.settings, self.w3, Web3.to_checksum_address(self.token), self.w3U)
-        #super().__init__(self.settings, self.w3, self.IERC20, self.w3U)
-        InterfaceSwapperContract.__init__(self, self.settings, self.w3, self.IERC20, self.w3U)
-        W3Utils.__init__(self, self.settings, self.w3)
+            
+        IERC20.__init__(self, self.settings, self.w3, Web3.to_checksum_address(self.token), self)
+        InterfaceSwapperContract.__init__(self, self.settings, self.w3, self, self)
 
     def reload(self):
         """
         Reload the Web3 connection, utilities, and contract interfaces after a settings change.
         """
         self.w3 = self.connect()
-        self.w3U = W3Utils(self.settings, self.w3)
-        self.IERC20 = IERC20(self.settings, self.w3, self.token, self.w3U)
-        super().__init__(self.settings, self.w3, self.IERC20, self.w3U)
+        IERC20.__init__(self, self.settings, self.w3, Web3.to_checksum_address(self.token), self)
+        InterfaceSwapperContract.__init__(self, self.settings, self.w3, self, self)
+        W3Utils.__init__(self, self.settings, self.w3)
 
     def connect(self):
         """

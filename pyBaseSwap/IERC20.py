@@ -3,6 +3,25 @@ from .core_abis import IERC20_ABI  # Import the ERC-20 ABI, adjust the import pa
 from .core_chains import chains  # Import the chains class, adjust the import path as necessary
 
 class IERC20:
+    """
+    A class to interact with ERC-20 token contracts on the Ethereum blockchain.
+
+    This class provides methods to retrieve token balances, approve spending,
+    and manage allowances for ERC-20 tokens. It leverages the Web3.py library 
+    to communicate with the Ethereum network and requires the ERC-20 ABI to 
+    function correctly.
+
+    Attributes:
+        settings: Core settings for managing RPC connection and user account.
+        user_address (str): User's wallet address from settings.
+        priv_key (str): User's private key for signing transactions.
+        w3 (Web3): Web3 instance for blockchain interaction.
+        token (str): ERC-20 token contract address.
+        w3U: Utility object for helper functions.
+        chain: Chain instance associated with the current network.
+        token_Instance: Contract instance of the ERC-20 token.
+    """
+    
     def __init__(self, settings, w3, token, w3U):
         """
         Initializes the IERC20 class for interacting with ERC-20 tokens.

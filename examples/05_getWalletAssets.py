@@ -1,13 +1,12 @@
-from pyBaseSwap.SwapperModul import BaseSwap
+from pyBaseSwap import BaseSwap
 
 BS = BaseSwap()
 
 
-
 tokens = BS.getWalletAssets(
-    wallet_address="0xcf48e4193C50bF9a18BAA02bF7b68bAB6f385948",
-    batch_size=10000,
-    blocks_to_check=200000
+    wallet_address="0xcf48e4193C50bF9a18BAA02bF7b68bAB6f385948", # Wallet addres to track
+    batch_size=10000, # Keep batch size reasonable; logs may restrict to processing only 1024+ blocks at a time
+    blocks_to_check=100000 #  be cautious of long processing times and potential RPC rate limits
     )
 
 # Initialize WalletTokenBalance

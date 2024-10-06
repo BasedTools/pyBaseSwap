@@ -1,6 +1,4 @@
 from pyBaseSwap import BaseSwap
-
-# The `BaseSwap`(BS) is a class that provides submoduls and functions to interact with ERC20 Smart Contracts and AMM (DEXs) from version 2 to 3.
 BS = BaseSwap(
  settings_file_path="./Settings.json", # set filename and path to config file if you need
  saveSettings=False # if you want to save settings to Settings.json file

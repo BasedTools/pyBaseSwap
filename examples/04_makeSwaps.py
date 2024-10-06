@@ -13,7 +13,7 @@ BS.changeRPC("http://127.0.0.1:8545/")
 
 print(
 f"""
-Loaded Address is: {BS.IERC20.user_address}
+Loaded Address is: {BS.user_address}
 ETH BALANCE: {BS.w3U.custom_round(BS.IAC.getETHBalance())}
 """
 )
@@ -30,20 +30,21 @@ if status:
  print("Transaction cost:", gas_infos[1],"ETH")
 
 #get token Balance after swap
-token_balance = BS.IERC20.get_token_balance()
-print(BS.IERC20.get_token_Name(),"Balance:", BS.IERC20.get_token_balance())
+token_balance = BS.get_token_balance()
+print(BS.get_token_Name(),"Balance:", BS.get_token_balance())
 
 #Swap BUSD balance back to ETH
 status, txHash, gas_infos = BS.SwapTokentoETH(
    token_balance
  )
+
 if not status:
  #Token is not approved!! 
  print(gas_infos)
 
 
 #Lets approve token balance and swap again
-status, txHash, gas_infos = BS.IERC20.approveSwapper(token_balance) # if no amount set approve max uint256 -1
+status, txHash, gas_infos = BS.approveSwapper(token_balance) #or leave blank to approve max uint256 -1
 print("Transaction cost:", gas_infos[1],"ETH")
 print()
 
@@ -52,12 +53,16 @@ status, txHash, gas_infos = BS.SwapTokentoETH(
    token_balance
  )
 print(status, txHash, gas_infos )
-print("Transaction cost:", gas_infos[1],"ETH")
+print("Transaction cost:", gas_infos[1],"ETH") # In the provided Python code snippet, the `[` is used to access
+# elements within a list or tuple. For example, in the line
+# `print("Transaction cost:", gas_infos[1],"ETH")`, the `[1]` is
+# used to access the element at index 1 in the `gas_infos` list.
+
 print()
 
 
 print(
 f"""
-ETH BALANCE: {BS.w3U.custom_round(BS.getETHBalance())}
+ETH BALANCE: {BS.custom_round(BS.getETHBalance())}
 """
 )

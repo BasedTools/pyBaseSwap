@@ -105,6 +105,24 @@ Changes a specific setting by its key and saves it to the file if required.
 class IERC20()
 ```
 
+A class to interact with ERC-20 token contracts on the Ethereum blockchain.
+
+This class provides methods to retrieve token balances, approve spending,
+and manage allowances for ERC-20 tokens. It leverages the Web3.py library
+to communicate with the Ethereum network and requires the ERC-20 ABI to
+function correctly.
+
+**Attributes**:
+
+- `settings` - Core settings for managing RPC connection and user account.
+- `user_address` _str_ - User's wallet address from settings.
+- `priv_key` _str_ - User's private key for signing transactions.
+- `w3` _Web3_ - Web3 instance for blockchain interaction.
+- `token` _str_ - ERC-20 token contract address.
+- `w3U` - Utility object for helper functions.
+- `chain` - Chain instance associated with the current network.
+- `token_Instance` - Contract instance of the ERC-20 token.
+
 <a id="IERC20.IERC20.__init__"></a>
 
 #### \_\_init\_\_

@@ -1,19 +1,37 @@
-# BasedToolsSwapper
+# pyBaseSwap
 
-BasedToolsSwapper is a Python library for aggregating token prices and evm swaps across multiple decentralized exchanges (DEXs).
+pyBaseSwap is a Python library designed to facilitate interaction with ERC-20 tokens on the Base L2 Ethereum blockchain. It provides an easy-to-use interface for managing token balances, allowances, and transactions, allowing developers to focus on building their applications without worrying about the complexities of blockchain interactions.
+
+##  [Documentation](https://github.com/BasedTools/pyBaseSwap/docs/README.md)
+##  [Examples](https://github.com/BasedTools/pyBaseSwap/examples)
+##  [Pypi Realese](https://pypi.org/project/pyBaseSwap/)
 
 ## Installation
 You can install the package using pip:
+```bash
+pip install pyBaseSwap
+```
+### Installing from Source
+If you prefer to install pyBaseSwap from the source, follow these steps:
 
-
-##  [Documentation](https://github.com/BasedTools/pyBaseSwap/docs/index.html)
-##  [Examples](https://github.com/BasedTools/pyBaseSwap/examples)
-##  [Pypi Realese](https://pypi.org/project/pyBaseSwap/#history)
+#### Clone the repository
+```bash
+git clone https://github.com/BaseTools/pyBaseSwap
+cd pyBaseSwap
+python setup.py install
+```
 
 ### `EXAMPLE USE`
-```bash
+```python
+from pyBaseSwap import BaseSwap
+BS = BaseSwap() # No Token Addresss Provided fallback to USDC
 
+BS.changeToken(
+  "0x65e570b560027F493f2b1907e8e8e3B9546053bD" #Tyler Token
+)
+usdPrice = BS.getUSDPrice() # fetch usd price
 
+print(usdPrice)
 ```
 
 ### `LICENSE`
