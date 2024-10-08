@@ -96,17 +96,40 @@ class InterfaceSwapperContract: #ISC
     
     def getUSDPriceOf_(self, tokenAddress):
         """
-        Fetches the USD price of a specified token (raw Wei format).
+        Fetches the ETH price of a specified token (raw Wei format).
 
         :param tokenAddress: Address of the token.
-        :return: Token price in USD (Wei).
+        :return: Token price in ETH (Wei).
         """
         return self.BTTSwapper.functions.getUSDPrice(
             self.w3.to_checksum_address(tokenAddress)
             ).call()
+        
+        
+    def getTokenETHPrice_(self, tokenAddress):
+        """
+        Fetches the ETH price of a specified token (raw Wei format).
+
+        :param tokenAddress: Address of the token.
+        :return: Token price in ETH (Wei).
+        """
+        return self.BTTSwapper.functions.getETHPrice(
+            self.w3.to_checksum_address(tokenAddress)
+            ).call()
+        
+    def getTokenETHPrice(self, tokenAddress):
+        """
+        Fetches the ETH price of a specified token (ether format).
+
+        :param tokenAddress: Address of the token.
+        :return: Token price in ETH (Ether).
+        """
+        return Web3.from_wei(self.BTTSwapper.functions.getETHPrice(
+            self.w3.to_checksum_address(tokenAddress)
+            ).call(), "ether")    
     
         
-    def getWETHPrice_(self):
+    def geNativPrice_(self):
         """
         Fetches the USD price of Wrapped ETH (WETH) from the contract (raw Wei format).
 
@@ -115,9 +138,9 @@ class InterfaceSwapperContract: #ISC
         return self.BTTSwapper.functions.getUSDPrice(
             self.chain.WETH).call()
         
-    def getWETHPrice(self):
+    def getNativPrice(self):
         """
-        Fetches the USD price of Wrapped ETH (WETH) and converts it to Ether format.
+        Fetches the USD price of  ETH (WETH) and converts it to Ether format.
 
         :return: WETH price in USD (Ether).
         """

@@ -2,26 +2,32 @@
 
 pyBaseSwap is a Python library designed to facilitate interaction with ERC-20 tokens on the Base L2 Ethereum blockchain. It provides an easy-to-use interface for managing token balances, allowances, and transactions, allowing developers to focus on building their applications without worrying about the complexities of blockchain interactions.
 
-##  [Documentation](https://github.com/BasedTools/pyBaseSwap/docs/README.md)
-##  [Examples](https://github.com/BasedTools/pyBaseSwap/examples)
+<div style="border: 2px solid #660000; padding: 10px; background-color: #ffe6e6; color: #cc0000; border-radius: 8px; font-weight: bold;">
+⚠️ You will be charged a 1% fee on your swap volume during the initial phase. This fee is temporarily set higher to cover server costs and other expenses.
+</div>
+
+
+##  [Documentation](https://github.com/BasedTools/pyBaseSwap/blob/main/docs/README.md)
+##  [Examples](https://github.com/BasedTools/pyBaseSwap/tree/main/examples)
 ##  [Pypi Realese](https://pypi.org/project/pyBaseSwap/)
 
-## Installation
+
+### Installation
 You can install the package using pip:
 ```bash
 pip install pyBaseSwap
 ```
-### Installing from Source
+#### Installing from Source
 If you prefer to install pyBaseSwap from the source, follow these steps:
 
-#### Clone the repository
+##### Clone the repository:
 ```bash
 git clone https://github.com/BaseTools/pyBaseSwap
 cd pyBaseSwap
 python setup.py install
 ```
 
-### `EXAMPLE USE`
+#### `EXAMPLE USE`
 ```python
 from pyBaseSwap import BaseSwap
 BS = BaseSwap() # No Token Addresss Provided fallback to USDC
@@ -34,7 +40,7 @@ usdPrice = BS.getUSDPrice() # fetch usd price
 print(usdPrice)
 ```
 
-### `LICENSE`
+#### `LICENSE`
 ```plaintext
 MIT License
 

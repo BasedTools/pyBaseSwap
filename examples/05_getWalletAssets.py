@@ -4,7 +4,7 @@ BS = BaseSwap()
 
 
 tokens = BS.getWalletAssets(
-    wallet_address="0xcf48e4193C50bF9a18BAA02bF7b68bAB6f385948", # Wallet addres to track
+    wallet_address="0x304eC59cad4060856D6796Ff948fA3f5Adb322fa", # Wallet addres to check
     batch_size=10000, # Keep batch size reasonable; logs may restrict to processing only 1024+ blocks at a time
     blocks_to_check=100000 #  be cautious of long processing times and potential RPC rate limits
     )

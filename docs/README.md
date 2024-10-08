@@ -450,7 +450,7 @@ Token price in USD (Ether).
 def getUSDPriceOf_(tokenAddress)
 ```
 
-Fetches the USD price of a specified token (raw Wei format).
+Fetches the ETH price of a specified token (raw Wei format).
 
 **Arguments**:
 
@@ -458,14 +458,50 @@ Fetches the USD price of a specified token (raw Wei format).
 
 **Returns**:
 
-Token price in USD (Wei).
+Token price in ETH (Wei).
 
-<a id="ISwapperContract.InterfaceSwapperContract.getWETHPrice_"></a>
+<a id="ISwapperContract.InterfaceSwapperContract.getTokenETHPrice_"></a>
 
-#### getWETHPrice\_
+#### getTokenETHPrice\_
 
 ```python
-def getWETHPrice_()
+def getTokenETHPrice_(tokenAddress)
+```
+
+Fetches the ETH price of a specified token (raw Wei format).
+
+**Arguments**:
+
+- `tokenAddress`: Address of the token.
+
+**Returns**:
+
+Token price in ETH (Wei).
+
+<a id="ISwapperContract.InterfaceSwapperContract.getTokenETHPrice"></a>
+
+#### getTokenETHPrice
+
+```python
+def getTokenETHPrice(tokenAddress)
+```
+
+Fetches the ETH price of a specified token (ether format).
+
+**Arguments**:
+
+- `tokenAddress`: Address of the token.
+
+**Returns**:
+
+Token price in ETH (Ether).
+
+<a id="ISwapperContract.InterfaceSwapperContract.geNativPrice_"></a>
+
+#### geNativPrice\_
+
+```python
+def geNativPrice_()
 ```
 
 Fetches the USD price of Wrapped ETH (WETH) from the contract (raw Wei format).
@@ -474,15 +510,15 @@ Fetches the USD price of Wrapped ETH (WETH) from the contract (raw Wei format).
 
 WETH price in USD (Wei).
 
-<a id="ISwapperContract.InterfaceSwapperContract.getWETHPrice"></a>
+<a id="ISwapperContract.InterfaceSwapperContract.getNativPrice"></a>
 
-#### getWETHPrice
+#### getNativPrice
 
 ```python
-def getWETHPrice()
+def getNativPrice()
 ```
 
-Fetches the USD price of Wrapped ETH (WETH) and converts it to Ether format.
+Fetches the USD price of  ETH (WETH) and converts it to Ether format.
 
 **Returns**:
 
@@ -1068,7 +1104,7 @@ Swaps one token for another using Uniswap V2.
 ## BaseSwap Objects
 
 ```python
-class BaseSwap(InterfaceSwapperContract, W3Utils)
+class BaseSwap(InterfaceSwapperContract, W3Utils, IERC20)
 ```
 
 A module for interacting with decentralized exchanges (DEX) and managing token swaps on the blockchain.
