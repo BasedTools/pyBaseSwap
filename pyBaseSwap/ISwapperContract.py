@@ -616,7 +616,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:
@@ -657,7 +657,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:
@@ -727,7 +727,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:
@@ -770,7 +770,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:
@@ -812,7 +812,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:
@@ -854,7 +854,7 @@ class InterfaceSwapperContract: #ISC
             txn,
             self.priv_key
         )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
         txn_receipt = self.w3.eth.wait_for_transaction_receipt(
             txn, timeout=self.settings.settings["timeout"])
         if txn_receipt["status"] == 1:

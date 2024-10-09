@@ -123,14 +123,14 @@ class IERC20:
         Approves the maximum amount for the Swapper contract to spend tokens.
         - `amount`: Amount to approve in Wei.
         """
-        return self.approve(self.chain.BBTTwapSwapper, amountIn=amount)
+        return self.approve(self.chain.BTTSwapper, amountIn=amount)
     
     def approveSwapper(self, amount):
         """
         Approves a specific amount for the Swapper contract to spend, converting from a human-readable format to Wei.
         - `amount`: Amount to approve.
         """
-        return self.approve(self.chain.BBTTwapSwapper, self.w3U.to_wei(amount, self.get_token_decimals()))  # Convert amount to Wei based on token decimals
+        return self.approve(self.chain.BTTSwapper, self.w3U.to_wei(amount, self.get_token_decimals()))  # Convert amount to Wei based on token decimals
     
     def is_approved(self, spender, amountIn):
         """
@@ -166,7 +166,7 @@ class IERC20:
                 txn,
                 self.priv_key  # Sign the transaction with the user's private key
             )
-            txn = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)  # Send the signed transaction
+            txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)  # Send the signed transaction
             txn_receipt = self.w3.eth.wait_for_transaction_receipt(
                 txn, timeout=self.settings.settings["timeout"])  # Wait for transaction receipt
             if txn_receipt['status'] == 1:  # Check if the transaction was successful

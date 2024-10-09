@@ -2,7 +2,7 @@
 
 pyBaseSwap is a Python library designed to facilitate interaction with ERC-20 tokens on the Base L2 Ethereum blockchain. It provides an easy-to-use interface for managing token balances, allowances, and transactions, allowing developers to focus on building their applications without worrying about the complexities of blockchain interactions.
 
-## ⚠️ Warning
+## Warning
 
 > **Warning:** You will be charged a 1% fee on your swap volume during the initial phase. This fee is temporarily set higher to cover server costs and other expenses.
 
