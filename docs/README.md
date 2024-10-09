@@ -496,12 +496,12 @@ Fetches the ETH price of a specified token (ether format).
 
 Token price in ETH (Ether).
 
-<a id="ISwapperContract.InterfaceSwapperContract.geNativPrice_"></a>
+<a id="ISwapperContract.InterfaceSwapperContract.getNativPrice_"></a>
 
-#### geNativPrice\_
+#### getNativPrice\_
 
 ```python
-def geNativPrice_()
+def getNativPrice_()
 ```
 
 Fetches the USD price of Wrapped ETH (WETH) from the contract (raw Wei format).
