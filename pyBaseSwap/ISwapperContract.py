@@ -129,7 +129,7 @@ class InterfaceSwapperContract: #ISC
             ).call(), "ether")    
     
         
-    def geNativPrice_(self):
+    def getNativPrice_(self):
         """
         Fetches the USD price of Wrapped ETH (WETH) from the contract (raw Wei format).
 
@@ -145,7 +145,7 @@ class InterfaceSwapperContract: #ISC
         :return: WETH price in USD (Ether).
         """
         return Web3.from_wei(self.BTTSwapper.functions.getUSDPrice(
-            self.chain.WETH).call(), "ether")
+            self.chain.WETH).call(), "mwei")
     
     def getAmountsOutTokenToETH_(self, inputAmount:int):
         """
