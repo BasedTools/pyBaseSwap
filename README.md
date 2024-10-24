@@ -14,7 +14,7 @@ pyBaseSwap is a Python library designed to facilitate interaction with ERC-20 to
 | BaseSwap         | v2 & v3            |
 | PancakeSwap    | v2 & v3            |
 | AlienBase           | v2 & v3          |
-| SwapBased         | v2 & v3                  |
+| SwapBased         | v2 & v3          |
 
 ##  [Documentation](https://github.com/BasedTools/pyBaseSwap/blob/main/docs/README.md)
 ##  [Examples](https://github.com/BasedTools/pyBaseSwap/tree/main/examples)
