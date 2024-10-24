@@ -7,6 +7,14 @@ pyBaseSwap is a Python library designed to facilitate interaction with ERC-20 to
 > **Warning:** You will be charged a 1% fee on your swap volume during the initial phase. This fee is temporarily set higher to cover server costs and other expenses.
 
 
+## Supported DEXs
+| DEX Name         |  Versions          |
+|------------------|------------------|
+| SushiSwap        | v2 & v3            |
+| BaseSwap         | v2 & v3            |
+| PancakeSwap    | v2 & v3            |
+| AlienBase           | v2 & v3          |
+| SwapBased         | v2 & v3                  |
 
 ##  [Documentation](https://github.com/BasedTools/pyBaseSwap/blob/main/docs/README.md)
 ##  [Examples](https://github.com/BasedTools/pyBaseSwap/tree/main/examples)

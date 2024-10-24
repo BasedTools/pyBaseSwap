@@ -47,6 +47,30 @@ class IERC20:
             address=Web3.to_checksum_address(self.token), abi=IERC20_ABI)  # Create contract instance with token address and ABI
         return token_Instance
     
+    
+    def get_token_balance_Of_Owner_(self, token_address, owner_address):
+        """
+        Returns the balance of the token_address from owner_address  in  Wei.
+        - `token_address`: Token Address to check the balance for.
+        - `owner_address`: Address to check the balance for.
+        """
+        token_Instance = self.w3.eth.contract(
+            address=Web3.to_checksum_address(token_address), abi=IERC20_ABI)
+        
+        return token_Instance.functions.balanceOf(owner_address).call()
+    
+    
+    def get_token_balance_Of_Owner(self, token_address, owner_address):
+        """
+        Returns the balance of the token_address from owner_address in a human-readable format (converted from Wei).
+        - `token_address`: Token Address to check the balance for.
+        - `owner_address`: Address to check the balance for.
+        """
+        token_Instance = self.w3.eth.contract(
+            address=Web3.to_checksum_address(token_address), abi=IERC20_ABI)
+        
+        return self.w3U.from_wei(token_Instance.functions.balanceOf(owner_address).call(), token_Instance.functions.decimals().call())  # Convert from Wei based on token decimals
+    
     def get_token_balanceOf(self, address):
         """
         Returns the balance of the token in a human-readable format (converted from Wei).
@@ -85,6 +109,7 @@ class IERC20:
         Returns the token's contract address.
         """
         return Web3.to_checksum_address(self.token_Instance.address)  # Convert to checksum address format
+    
 
     def get_token_decimals(self):
         """
@@ -118,19 +143,19 @@ class IERC20:
         """
         return self.token_Instance.functions.allowance(self.user_address, spender).call()  # Calls the `allowance` function
     
-    def approveSwapper_(self, amount):
+    def approveSwapper_(self, amountIn: int = 0):
         """
         Approves the maximum amount for the Swapper contract to spend tokens.
         - `amount`: Amount to approve in Wei.
         """
-        return self.approve(self.chain.BTTSwapper, amountIn=amount)
+        return self.approve(self.chain.BTTSwapper, amountIn)
     
-    def approveSwapper(self, amount):
+    def approveSwapper(self, amountIn: float = 0):
         """
         Approves a specific amount for the Swapper contract to spend, converting from a human-readable format to Wei.
         - `amount`: Amount to approve.
         """
-        return self.approve(self.chain.BTTSwapper, self.w3U.to_wei(amount, self.get_token_decimals()))  # Convert amount to Wei based on token decimals
+        return self.approve(self.chain.BTTSwapper, self.w3U.to_wei(amountIn, self.get_token_decimals()))  # Convert amount to Wei based on token decimals
     
     def is_approved(self, spender, amountIn):
         """
@@ -147,16 +172,17 @@ class IERC20:
         - `spender`: Address of the spender.
         - `amountIn`: Amount to approve (default is 0, meaning full approval).
         """
+        approveAmount = 2**256 - 1  # Set the approval amount to max (2^256 - 1)
+        if amountIn > 0:
+            approveAmount = amountIn 
         if not self.is_approved(spender, amountIn):
-            approveAmount = 2**256 - 1  # Set the approval amount to max (2^256 - 1)
-            if amountIn > 0:
-                approveAmount = amountIn  # Use the specified amount if it's greater than 0
+            # Use the specified amount if it's greater than 0
             txn = self.token_Instance.functions.approve(
                 Web3.to_checksum_address(spender),
                 approveAmount
             ).build_transaction({
                 'from': self.user_address,
-                'gasPrice': self.w3.eth.gas_price + Web3.to_wei(self.settings.settings["GWEI_OFFSET"], "gwei"),  # Add gas price offset
+                'gasPrice': self.w3.eth.gas_price,  # Add gas price offset
                 'nonce': self.w3.eth.get_transaction_count(self.user_address),
                 'value': 0
             })

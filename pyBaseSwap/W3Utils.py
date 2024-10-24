@@ -1,6 +1,6 @@
 from decimal import Decimal, ROUND_DOWN
 from web3 import Web3 
-
+from .core_abis import IERC20_ABI
 
 
 class W3Utils:
@@ -34,6 +34,23 @@ class W3Utils:
             The current block number.
         """
         return self.w3.eth.blockNumber
+    
+    def isPrivateKey(self, secret):
+        if self.isValidPrivatKey(secret):
+            return True
+        else:
+            return False
+    
+    def isValidPrivatKey(self, secret):
+        if len(secret) in [64, 66] and all(c in '0123456789abcdefABCDEF' for c in secret[2:]) if secret.startswith('0x') else len(secret) == 64 and all(c in '0123456789abcdefABCDEF' for c in secret):
+            return True
+        return False
+        
+    def isValidMnomic(self, secret):
+        if len(secret) in [12, 15, 18, 21, 24]:
+            return True
+        return False
+        
     
     def getMnemonicToPrivKey(self, mnemonic, account_path: str = "m/44'/60'/0'/0/0"):
         """
@@ -90,7 +107,7 @@ class W3Utils:
         """
         gas = self.w3.eth.estimate_gas(txn)
         gas_wei = gas + (gas / 10)  # Adding 10% overhead to gas
-        gas_cost = self.custom_round(Web3.from_wei(gas * (self.w3.eth.gas_price + (int(self.settings.settings['GWEI_OFFSET']) * (10**9))), "ether"))
+        gas_cost = self.custom_round(Web3.from_wei(gas * (self.w3.eth.gas_price * (10**9))), "ether")
         if float(gas_cost) > float(self.settings.settings["MaxTXFeeETH"]):
             return gas_wei, gas_cost, False
         return int(gas_wei), gas_cost, True
@@ -202,7 +219,20 @@ class W3Utils:
         format = "{:." + f"{self.get_decimal_places(number)}" + "f}"
         decimal_number = format.format(number)
         return decimal_number
+    
 
+        
+
+    def is_erc20_token(self, contract_address):
+        """
+        Check if a contract is an ERC-20 token by verifying the presence of decimals function.
+        """
+        try:
+            contract = self.w3.eth.contract(address=contract_address, abi=IERC20_ABI)
+            contract.functions.decimals().call()
+            return True
+        except Exception as e:
+            return False 
 
     def getWalletTokens(self, wallet_address: str, batch_size: int=10000, blocks_to_check: int = 150000 ):
         """
@@ -232,7 +262,6 @@ class W3Utils:
         start_block = max(0, latest_block - blocks_to_check)
         transfer_event_signature = self.w3.keccak(text="Transfer(address,address,uint256)")
         wallet_address_padded = '0x' + wallet_address[2:].rjust(64, '0')
-
         def fetch_token_transfer_logs(start_block, end_block):
             try:
                 filter_params = {
@@ -244,18 +273,13 @@ class W3Utils:
             except Exception as e:
                 print(f"Error fetching logs: {e}")
                 return []
-
         token_addresses = []
         while start_block <= latest_block:
             end_block = min(start_block + batch_size - 1, latest_block)
             logs = fetch_token_transfer_logs(start_block, end_block)
             for log in logs:
                 token_address = log['address']
-                token_addresses.append(token_address)
+                if self.is_erc20_token(token_address):
+                    token_addresses.append(token_address)
             start_block = end_block + 1
-
-        # Display the token addresses
         return list(set(token_addresses))
-
-
-        

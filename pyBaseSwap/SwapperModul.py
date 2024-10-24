@@ -150,10 +150,3 @@ class BaseSwap(InterfaceSwapperContract, W3Utils, IERC20):
         self.token = Web3.to_checksum_address(token)
         IERC20.__init__(self, self.settings, self.w3, token, self)
         InterfaceSwapperContract.__init__(self, self.settings, self.w3, self, self)
-    
-
-
-
-
-
-

@@ -147,6 +147,30 @@ def init_token_instance()
 
 Initializes and returns the ERC-20 contract instance.
 
+<a id="IERC20.IERC20.get_token_balance_Of_Owner_"></a>
+
+#### get\_token\_balance\_Of\_Owner\_
+
+```python
+def get_token_balance_Of_Owner_(token_address, owner_address)
+```
+
+Returns the balance of the token_address from owner_address  in  Wei.
+- `token_address`: Token Address to check the balance for.
+- `owner_address`: Address to check the balance for.
+
+<a id="IERC20.IERC20.get_token_balance_Of_Owner"></a>
+
+#### get\_token\_balance\_Of\_Owner
+
+```python
+def get_token_balance_Of_Owner(token_address, owner_address)
+```
+
+Returns the balance of the token_address from owner_address in a human-readable format (converted from Wei).
+- `token_address`: Token Address to check the balance for.
+- `owner_address`: Address to check the balance for.
+
 <a id="IERC20.IERC20.get_token_balanceOf"></a>
 
 #### get\_token\_balanceOf

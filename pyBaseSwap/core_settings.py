@@ -8,7 +8,6 @@ class CoreSettings:
         "address": "",  # User's wallet address, only needed for transactions
         "private_key": "",  # Private key, required for transactions like swap, approve, etc.
         "RPC": "https://mainnet.base.org",  # RPC URL for connecting to Binance Smart Chain (BSC)
-        "GWEI_OFFSET": 0,  # Offset to estimate gas cost and adjust it if necessary
         "MaxTXFeeETH": 0.0001,  # Maximum transaction fee in ETH to avoid excessive gas costs
         "Slippage": 3,  # Maximum allowed slippage percentage for swap transactions
         "timeout": 60  # Timeout in seconds for web3 requests

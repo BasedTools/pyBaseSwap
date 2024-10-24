@@ -154,6 +154,7 @@ class InterfaceSwapperContract: #ISC
         :param inputAmount: Input ETH amount.
         :return: Output token amount in Wei.
         """
+
         return self.BTTSwapper.functions.getAmountsOut(
             self.IERC20.get_token_address(),
             self.chain.WETH,
@@ -266,33 +267,36 @@ class InterfaceSwapperContract: #ISC
         tokenList = [Web3.to_checksum_address(address) for address in tokenList]
         tokenDataList = []
         ethPrice = self.getETHUSDPrice()
-
+       
         for i in range(0, len(tokenList), MAX_BATCH_SIZE):
             tokenBatch = tokenList[i:i + MAX_BATCH_SIZE]
-            tokenAddress, tokenName, tokenSymbol, tokenDecimals, tokensVersion, tokenBalances, tokenUSDPrice, tokenETHPrice = (
-                self.BTTSwapper.functions.getWalletTokenDATA(wallet_address, tokenBatch).call()
-            )
-            for j in range(len(tokenBatch)):
-                hBalance = tokenBalances[j] / 10**tokenDecimals[j]
-                tokenPriceEth = Web3.from_wei(tokenETHPrice[j], "ether")
-                tokenUSD = tokenPriceEth * ethPrice
-                
-                tokenData = {
-                    "Address": tokenAddress[j],
-                    "Name": tokenName[j],
-                    "Symbol": tokenSymbol[j],
-                    "Decimals": int(tokenDecimals[j]),
-                    "UniswapV": tokensVersion[j],
-                    "BalanceWei": tokenBalances[j],
-                    "Balance": hBalance,
-                    "BalanceUSD": float(self.w3U.get_human_amount(float(tokenUSD) * float(hBalance))),
-                    "USDPriceWei": tokenUSDPrice[j],
-                    "ETHPriceWei": tokenETHPrice[j],
-                    "USDPrice":  self.w3U.get_human_amount(float(tokenUSD)),
-                    "ETHPrice": self.w3U.get_human_amount(tokenPriceEth)
-                }
-                tokenDataList.append(tokenData)
+            try:
+                tokenAddress, tokenName, tokenSymbol, tokenDecimals, tokensVersion, tokenBalances, tokenUSDPrice, tokenETHPrice = (
+                    self.BTTSwapper.functions.getWalletTokenDATA(wallet_address, tokenBatch).call()
+                )
 
+                for j in range(len(tokenBatch)):
+                    hBalance = tokenBalances[j] / 10**tokenDecimals[j]
+                    tokenPriceEth = Web3.from_wei(tokenETHPrice[j], "ether")
+                    tokenUSD = tokenPriceEth * ethPrice
+
+                    tokenData = {
+                        "Address": tokenAddress[j],
+                        "Name": tokenName[j],
+                        "Symbol": tokenSymbol[j],
+                        "Decimals": int(tokenDecimals[j]),
+                        "UniswapV": tokensVersion[j],
+                        "BalanceWei": tokenBalances[j],
+                        "Balance": hBalance,
+                        "BalanceUSD": float(self.w3U.get_human_amount(float(tokenUSD) * float(hBalance))),
+                        "USDPriceWei": tokenUSDPrice[j],
+                        "ETHPriceWei": tokenETHPrice[j],
+                        "USDPrice":  self.w3U.get_human_amount(float(tokenUSD)),
+                        "ETHPrice": self.w3U.get_human_amount(tokenPriceEth)
+                    }
+                    tokenDataList.append(tokenData)
+            except Exception as e:
+                print(e, tokenBatch)
                 
         ethBalance = self.getETHBalanceOf_(wallet_address)
         eths = Web3.from_wei(ethBalance,"ether")
@@ -527,7 +531,7 @@ class InterfaceSwapperContract: #ISC
                 amountOutMinimum
         ).build_transaction({
                     'from': self.user_address,
-                    'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]) ,"gwei"),
+                    'gasPrice': self.w3.eth.gas_price ,
                     'nonce': self.w3.eth.get_transaction_count(self.user_address),
                     'value': int(inputAmount)
         })
@@ -554,7 +558,7 @@ class InterfaceSwapperContract: #ISC
             minOutput
         ).build_transaction({
                 'from': self.user_address,
-                'gasPrice': int(self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]), "gwei")),
+                'gasPrice': int(self.w3.eth.gas_price ),
                 'nonce': self.w3.eth.get_transaction_count(self.user_address),
                 'value': int(inputAmount)
         })
@@ -606,7 +610,7 @@ class InterfaceSwapperContract: #ISC
             amountOutMinimum
         ).build_transaction({
             'from': self.user_address,
-             'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]) ,"gwei"),
+             'gasPrice': self.w3.eth.gas_price ,
              'nonce': self.w3.eth.get_transaction_count(self.user_address),
              'value': int(inputAmount)
         })
@@ -647,7 +651,7 @@ class InterfaceSwapperContract: #ISC
             minOutput
         ).build_transaction({
             'from': self.user_address,
-            'gasPrice': int(self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]), "gwei")),
+            'gasPrice': int(self.w3.eth.gas_price ),
             'nonce': self.w3.eth.get_transaction_count(self.user_address),
             'value': int(inputAmount)
         })
@@ -706,34 +710,37 @@ class InterfaceSwapperContract: #ISC
     Returns:
         tuple: A tuple containing a boolean (success status), transaction hex, and gas estimate.
     """
-        path, _, pools, poolFees = self.getTokentoETHPathV3()
-        amountOut = self.getAmountsOutV3(pools, path, inputAmount)[-1]
-        amountOutMinimum = int(amountOut - (amountOut * int(self.settings.settings["Slippage"])) / 100)
-        txn = self.BTTSwapper.functions.swapTokenToETHV3(
-            path,
-            pools,
-            poolFees,
-            inputAmount,
-            amountOutMinimum
-        ).build_transaction({
-            'from': self.user_address,
-            'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]),"gwei"),
-            'nonce': self.w3.eth.get_transaction_count(self.user_address),
-            'value': 0
-        })
-        gas = self.w3U.estimateGas(txn)
-        txn.update({'gas': gas[0]})
-        signed_txn = self.w3.eth.account.sign_transaction(
-            txn,
-            self.priv_key
-        )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
-        txn_receipt = self.w3.eth.wait_for_transaction_receipt(
-            txn, timeout=self.settings.settings["timeout"])
-        if txn_receipt["status"] == 1:
-            return True, txn.hex(), gas
-        else:
-            return False, txn.hex(), gas
+        try:
+            path, _, pools, poolFees = self.getTokentoETHPathV3()
+            amountOut = self.getAmountsOutV3(pools, path, inputAmount)[-1]
+            amountOutMinimum = int(amountOut - (amountOut * int(self.settings.settings["Slippage"])) / 100)
+            txn = self.BTTSwapper.functions.swapTokenToETHV3(
+                path,
+                pools,
+                poolFees,
+                inputAmount,
+                amountOutMinimum
+            ).build_transaction({
+                'from': self.user_address,
+                'gasPrice': self.w3.eth.gas_price,
+                'nonce': self.w3.eth.get_transaction_count(self.user_address),
+                'value': 0
+            })
+            gas = self.w3U.estimateGas(txn)
+            txn.update({'gas': gas[0]})
+            signed_txn = self.w3.eth.account.sign_transaction(
+                txn,
+                self.priv_key
+            )
+            txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
+            txn_receipt = self.w3.eth.wait_for_transaction_receipt(
+                txn, timeout=self.settings.settings["timeout"])
+            if txn_receipt["status"] == 1:
+                return True, txn.hex(), gas
+            else:
+                return False, txn.hex(), gas
+        except Exception as e:
+            return False, "0x0", e
 
 
 
@@ -760,7 +767,7 @@ class InterfaceSwapperContract: #ISC
             amountOutMinimum
         ).build_transaction({
             'from': self.user_address,
-            'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]),"gwei"),
+            'gasPrice': self.w3.eth.gas_price,
             'nonce': self.w3.eth.get_transaction_count(self.user_address),
             'value': 0
         })
@@ -792,33 +799,36 @@ class InterfaceSwapperContract: #ISC
         Returns:
             tuple: A tuple containing a boolean (success status), transaction hex, and gas estimate.
         """
-        path, dexIdents = self.getTokentoETHPathV2()
-        amountOut = self.getAmountsOutV2(inputAmount, path, dexIdents)[-1]
-        amountOutMinimum = int(amountOut - (amountOut * int(self.settings.settings["Slippage"])) / 100)
-        txn = self.BTTSwapper.functions.swapTokentoETHV2(
-            path,
-            dexIdents,
-            inputAmount,
-            amountOutMinimum
-        ).build_transaction({
-            'from': self.user_address,
-            'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]),"gwei"),
-            'nonce': self.w3.eth.get_transaction_count(self.user_address),
-            'value': 0
-        })
-        gas = self.w3U.estimateGas(txn)
-        txn.update({'gas': gas[0]})
-        signed_txn = self.w3.eth.account.sign_transaction(
-            txn,
-            self.priv_key
-        )
-        txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
-        txn_receipt = self.w3.eth.wait_for_transaction_receipt(
-            txn, timeout=self.settings.settings["timeout"])
-        if txn_receipt["status"] == 1:
-            return True, txn.hex(), gas
-        else:
-            return False, txn.hex(), gas
+        try:
+            path, dexIdents = self.getTokentoETHPathV2()
+            amountOut = self.getAmountsOutV2(inputAmount, path, dexIdents)[-1]
+            amountOutMinimum = int(amountOut - (amountOut * int(self.settings.settings["Slippage"])) / 100)
+            txn = self.BTTSwapper.functions.swapTokentoETHV2(
+                path,
+                dexIdents,
+                inputAmount,
+                amountOutMinimum
+            ).build_transaction({
+                'from': self.user_address,
+                'gasPrice': self.w3.eth.gas_price,
+                'nonce': self.w3.eth.get_transaction_count(self.user_address),
+                'value': 0
+            })
+            gas = self.w3U.estimateGas(txn)
+            txn.update({'gas': gas[0]})
+            signed_txn = self.w3.eth.account.sign_transaction(
+                txn,
+                self.priv_key
+            )
+            txn = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
+            txn_receipt = self.w3.eth.wait_for_transaction_receipt(
+                txn, timeout=self.settings.settings["timeout"])
+            if txn_receipt["status"] == 1:
+                return True, txn.hex(), gas
+            else:
+                return False, txn.hex(), gas
+        except Exception as e:
+            return False, "0x0", e
 
 
     def SwapFromTokentoTokenV2(self, tokenIn, tokenOut, inputAmount: int, trys: int = 1):
@@ -844,7 +854,7 @@ class InterfaceSwapperContract: #ISC
             amountOutMinimum
         ).build_transaction({
                 'from': self.user_address,
-                'gasPrice': self.w3.eth.gas_price + Web3.to_wei(int(self.settings.settings["GWEI_OFFSET"]),"gwei"),
+                'gasPrice': self.w3.eth.gas_price,
                 'nonce': self.w3.eth.get_transaction_count(self.user_address),
                 'value': 0
         })
