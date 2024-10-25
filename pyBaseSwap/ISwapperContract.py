@@ -871,3 +871,39 @@ class InterfaceSwapperContract: #ISC
             return True, txn.hex(), gas
         else:
             return False, txn.hex(), gas
+        
+        
+def decodeSwapTransaction(self, tx_hash):
+    """
+    Decodes the input of a swap transaction given its transaction hash.
+
+    This method retrieves the transaction from the Ethereum network using 
+    the provided transaction hash and decodes the input data using the 
+    BasedTools Swapper to extract details such as the swap path, the 
+    minimum output amount, and the input amount.
+
+    Args:
+        tx_hash (str): The transaction hash of the swap transaction to decode.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - tx_hash (str): The transaction hash.
+            - path (list): The path of tokens involved in the swap.
+            - amount_in (int): The amount of tokens being swapped.
+            - min_output (int): The minimum expected output from the swap.
+
+    Raises:
+        ValueError: If decoding the transaction input fails or if the 
+        transaction is not compatible with the BasedTools Swapper.
+    """
+    tx = self.w3.eth.get_transaction(tx_hash)
+    try:
+        function, parameters = self.BTTSwapper.decode_function_input(tx.input)
+        print(parameters)
+        path = parameters['path']
+        min_output = parameters['minOutput']
+        amount_in = parameters.get('amountIn', tx["value"])
+        return tx_hash, path, amount_in, min_output
+    except Exception as e:
+        raise ValueError(f"Failed to decode transaction input: {str(e)}")
+        

@@ -1,6 +1,6 @@
 from decimal import Decimal, ROUND_DOWN
 from web3 import Web3 
-from .core_abis import IERC20_ABI
+from .core_abis import IERC20_ABI, MULTICALL_ABI
 
 
 class W3Utils:
@@ -107,9 +107,14 @@ class W3Utils:
         """
         gas = self.w3.eth.estimate_gas(txn)
         gas_wei = gas + (gas / 10)  # Adding 10% overhead to gas
-        gas_cost = self.custom_round(Web3.from_wei(gas * (self.w3.eth.gas_price * (10**9))), "ether")
+        gas_cost = self.custom_round(
+            Web3.from_wei( 
+                          gas * ( self.w3.eth.gas_price * (10**9)),
+                          "ether"
+                          )
+            )
         if float(gas_cost) > float(self.settings.settings["MaxTXFeeETH"]):
-            return gas_wei, gas_cost, False
+            return int(gas_wei), gas_cost, False
         return int(gas_wei), gas_cost, True
 
     def custom_round(self, num):
@@ -228,11 +233,40 @@ class W3Utils:
         Check if a contract is an ERC-20 token by verifying the presence of decimals function.
         """
         try:
-            contract = self.w3.eth.contract(address=contract_address, abi=IERC20_ABI)
-            contract.functions.decimals().call()
+            self.w3.eth.call({'to': contract_address,'data': '0x313ce567'})
             return True
         except Exception as e:
             return False 
+        
+        
+    def multicall_is_erc20_token(self, token_addresses):
+        """
+        Check if a list of contract addresses are ERC-20 tokens by verifying the presence of the decimals function using Multicall v3.
+    
+        Args:
+            token_addresses (list): A list of token contract addresses to check.
+    
+        Returns:
+            list: A list of token contract addresses that are ERC-20 tokens.
+        """
+        multicall_contract = self.w3.eth.contract(address="0xcA11bde05977b3631167028862bE2a173976CA11", abi=MULTICALL_ABI)
+        erc20_tokens = []
+        batch_size = 28
+        for i in range(0, len(token_addresses), batch_size):
+            current_batch = token_addresses[i:i + batch_size]
+            multicall_data = [{
+                'target': token_address,
+                'callData': "0x313ce567"  # Function selector for decimals()
+            } for token_address in current_batch]
+            try:
+                response = multicall_contract.functions.tryAggregate(False, multicall_data).call()
+                for j, token_address in enumerate(current_batch):
+                    success, return_data = response[j]
+                    if success and return_data != "0x":
+                        erc20_tokens.append(token_address)
+            except Exception as e:
+                print(f"Multicall error: {e}")
+        return erc20_tokens
 
     def getWalletTokens(self, wallet_address: str, batch_size: int=10000, blocks_to_check: int = 150000 ):
         """
@@ -279,7 +313,13 @@ class W3Utils:
             logs = fetch_token_transfer_logs(start_block, end_block)
             for log in logs:
                 token_address = log['address']
-                if self.is_erc20_token(token_address):
-                    token_addresses.append(token_address)
-            start_block = end_block + 1
-        return list(set(token_addresses))
+                #if self.is_erc20_token(token_address):
+                token_addresses.append(token_address)       
+            
+            start_block = end_block +1
+        return list(set(self.multicall_is_erc20_token(token_addresses)))
+    
+    
+
+        
+        

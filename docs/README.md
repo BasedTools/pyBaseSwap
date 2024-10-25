@@ -291,7 +291,7 @@ Returns the token allowance for a spender in Wei.
 #### approveSwapper\_
 
 ```python
-def approveSwapper_(amount)
+def approveSwapper_(amountIn: int = 0)
 ```
 
 Approves the maximum amount for the Swapper contract to spend tokens.
@@ -302,7 +302,7 @@ Approves the maximum amount for the Swapper contract to spend tokens.
 #### approveSwapper
 
 ```python
-def approveSwapper(amount)
+def approveSwapper(amountIn: float = 0)
 ```
 
 Approves a specific amount for the Swapper contract to spend, converting from a human-readable format to Wei.
@@ -1119,6 +1119,40 @@ Swaps one token for another using Uniswap V2.
 
 - `tuple` - A tuple containing a boolean (success status), transaction hex, and gas estimate.
 
+<a id="ISwapperContract.decodeSwapTransaction"></a>
+
+#### decodeSwapTransaction
+
+```python
+def decodeSwapTransaction(self, tx_hash)
+```
+
+Decodes the input of a swap transaction given its transaction hash.
+
+This method retrieves the transaction from the Ethereum network using
+the provided transaction hash and decodes the input data using the
+BasedTools Swapper to extract details such as the swap path, the
+minimum output amount, and the input amount.
+
+**Arguments**:
+
+- `tx_hash` _str_ - The transaction hash of the swap transaction to decode.
+  
+
+**Returns**:
+
+- `tuple` - A tuple containing the following elements:
+  - tx_hash (str): The transaction hash.
+  - path (list): The path of tokens involved in the swap.
+  - amount_in (int): The amount of tokens being swapped.
+  - min_output (int): The minimum expected output from the swap.
+  
+
+**Raises**:
+
+- `ValueError` - If decoding the transaction input fails or if the
+  transaction is not compatible with the BasedTools Swapper.
+
 <a id="SwapperModul"></a>
 
 # SwapperModul
@@ -1544,6 +1578,35 @@ Formats a number with the appropriate number of decimal places for human-readabl
   --------
   str
   The formatted number as a string.
+
+<a id="W3Utils.W3Utils.is_erc20_token"></a>
+
+#### is\_erc20\_token
+
+```python
+def is_erc20_token(contract_address)
+```
+
+Check if a contract is an ERC-20 token by verifying the presence of decimals function.
+
+<a id="W3Utils.W3Utils.multicall_is_erc20_token"></a>
+
+#### multicall\_is\_erc20\_token
+
+```python
+def multicall_is_erc20_token(token_addresses)
+```
+
+Check if a list of contract addresses are ERC-20 tokens by verifying the presence of the decimals function using Multicall v3.
+
+**Arguments**:
+
+- `token_addresses` _list_ - A list of token contract addresses to check.
+  
+
+**Returns**:
+
+- `list` - A list of token contract addresses that are ERC-20 tokens.
 
 <a id="W3Utils.W3Utils.getWalletTokens"></a>
 

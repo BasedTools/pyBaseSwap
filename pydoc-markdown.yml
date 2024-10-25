@@ -1,7 +1,7 @@
 loaders:
   - type: python
     search_path:
-      - pyBaseSwap  # Point to the folder containing your Python files
+      - pyBaseSwap 
 
 renderer:
   type: markdown
