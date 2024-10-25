@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyBaseSwap"
-version = "0.13"
+version = "0.14"
 description = "pyBaseSwap provides Simple use of Blockchain data a"
 authors = ["BasedToolsAdmin@protonmail.com"]
 license = "MIT"

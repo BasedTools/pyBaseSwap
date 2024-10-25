@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyBaseSwap',
-    version='0.13',
+    version='0.14',
     description='A Python library for aggregating token prices and swaps across multiple DEXs',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
